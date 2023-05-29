@@ -22,15 +22,17 @@ type Config struct {
 	ServiceHost string
 	ServicePort string
 
-	Environment string // debug, test, release
-	Version     string
-
-	UserServiceHost string 
+	Environment     string // debug, test, release
+	Version         string
+	SecretKey       string
+	UserServiceHost string
 	UserServicePort string
 
 	OrderServiceHost string
-	OrderServicePort string	
+	OrderServicePort string
 
+	DefaultOffset    string
+	DefaultLimit     string
 	PostgresHost     string
 	PostgresPort     int
 	PostgresUser     string
@@ -50,16 +52,21 @@ func Load() Config {
 
 	config.ServiceName = cast.ToString(getOrReturnDefaultValue("SERVICE_NAME", "api-gateway"))
 	config.ServiceHost = cast.ToString(getOrReturnDefaultValue("SERVICE_HOST", "localhost"))
-	config.ServicePort = cast.ToString(getOrReturnDefaultValue("SERVICE_PORT", ":9000"))
+	config.ServicePort = cast.ToString(getOrReturnDefaultValue("SERVICE_PORT", ":9001"))
 
 	config.Environment = cast.ToString(getOrReturnDefaultValue("ENVIRONMENT", DebugMode))
 	config.Version = cast.ToString(getOrReturnDefaultValue("VERSION", "1.0"))
 
-	config.UserServiceHost=cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.UserServicePort=cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":8081"))
+	config.UserServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
+	config.UserServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9000"))
 
-	config.OrderServiceHost=cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.OrderServicePort=cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":8080"))
+	config.OrderServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
+	config.OrderServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":8080"))
+
+	config.SecretKey = "hello"
+
+	config.DefaultOffset = cast.ToString(getOrReturnDefaultValue("DEFAULT_OFFSET", "0"))
+	config.DefaultLimit = cast.ToString(getOrReturnDefaultValue("DEFAULT_LIMIT", "10"))
 
 	config.PostgresHost = cast.ToString(getOrReturnDefaultValue("POSTGRES_HOST", "0.0.0.0"))
 	config.PostgresPort = cast.ToInt(getOrReturnDefaultValue("POSTGRES_PORT", 5432))

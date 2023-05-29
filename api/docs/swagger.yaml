@@ -7,6 +7,11 @@ definitions:
       status:
         type: string
     type: object
+  user_service.CreateOTP:
+    properties:
+      phone_number:
+        type: string
+    type: object
   user_service.CreateUser:
     properties:
       date_of_birth:
@@ -42,6 +47,101 @@ definitions:
 info:
   contact: {}
 paths:
+  /login:
+    get:
+      consumes:
+      - application/json
+      description: Verify OTP
+      operationId: verify_otp
+      parameters:
+      - description: otp_code
+        in: query
+        name: otp_code
+        required: true
+        type: string
+      - description: phone_number
+        in: query
+        name: phone_number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Verify OTP
+      tags:
+      - OTP
+    post:
+      consumes:
+      - application/json
+      description: Create OTP
+      operationId: create_otp
+      parameters:
+      - description: CreateOTPRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.CreateOTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create OTP
+      tags:
+      - OTP
   /user:
     post:
       consumes:

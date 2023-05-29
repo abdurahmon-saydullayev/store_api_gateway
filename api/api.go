@@ -1,7 +1,7 @@
 package api
 
 import (
-	// _ "Projects/store/store_api_gateway/api/docs"
+	_ "Projects/store/store_api_gateway/api/docs"
 	"Projects/store/store_api_gateway/api/handlers"
 	"Projects/store/store_api_gateway/config"
 
@@ -13,10 +13,13 @@ import (
 func SetUpAPI(r *gin.Engine, h handlers.Handler, cfg config.Config) {
 	//user
 	r.POST("/user", h.CreateUser)
-	r.GET("/user/:id", h.GetUserById)
+	r.GET("/user/:id", h.GetUserByID)
 	//order
 	// r.POST("/order", h.CreateOrder)
 	// r.GET("/order/:id", h.GetOrderByID)
+	// otp
+	r.POST("/login", h.CreateUserOTP)
+	r.GET("/login", h.VerifyUserOTP)
 
 	url := ginSwagger.URL("swagger/doc.json") // The url pointing to API definition
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))

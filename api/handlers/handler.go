@@ -5,8 +5,11 @@ import (
 	"Projects/store/store_api_gateway/config"
 	"Projects/store/store_api_gateway/grpc/client"
 	"Projects/store/store_api_gateway/pkg/logger"
-
+	"bufio"
 	"encoding/json"
+	htp "net/http"
+	"net/url"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gogo/protobuf/jsonpb"
@@ -74,6 +77,25 @@ func ProtoToStruct(s interface{}, p protoiface.MessageV1) error {
 	return err
 }
 
+func (h *Handler) getOffsetParam(c *gin.Context) (offset int, err error) {
+	if h.cfg.DefaultOffset != "" {
+		offsetStr := c.DefaultQuery("offset", h.cfg.DefaultOffset)
+		return strconv.Atoi(offsetStr)
+	}
+
+	offsetStr := c.DefaultQuery("offset", "0")
+	return strconv.Atoi(offsetStr)
+}
+
+func (h *Handler) getLimitParam(c *gin.Context) (offset int, err error) {
+	if h.cfg.DefaultLimit != "" {
+		limitStr := c.DefaultQuery("limit", h.cfg.DefaultLimit)
+		return strconv.Atoi(limitStr)
+	}
+	limitStr := c.DefaultQuery("limit", "10")
+	return strconv.Atoi(limitStr)
+}
+
 func (h *Handler) handleErrorResponse(c *gin.Context, code int, message string, err interface{}) {
 	h.log.Error(message, logger.Int("code", code), logger.Any("error", err))
 	c.JSON(code, ResponseModel{
@@ -89,4 +111,36 @@ func (h *Handler) handleSuccessResponse(c *gin.Context, code int, message string
 		Message: message,
 		Data:    data,
 	})
+}
+
+func (h *Handler) MakeProxy(c *gin.Context, proxyUrl, path string) (err error) {
+	req := c.Request
+
+	proxy, err := url.Parse(proxyUrl)
+	if err != nil {
+		h.log.Error("error in parse addr: %v", logger.Error(err))
+		c.String(htp.StatusInternalServerError, "error")
+		return
+	}
+
+	req.URL.Scheme = proxy.Scheme
+	req.URL.Host = proxy.Host
+	req.URL.Path = path
+	transport := htp.DefaultTransport
+	resp, err := transport.RoundTrip(req)
+	if err != nil {
+		h.log.Error("error while transport: %v", logger.Error(err))
+		return
+	}
+
+	for k, vv := range resp.Header {
+		for _, v := range vv {
+			c.Header(k, v)
+		}
+	}
+	defer resp.Body.Close()
+
+	c.Status(resp.StatusCode)
+	_, _ = bufio.NewReader(resp.Body).WriteTo(c.Writer)
+	return
 }
