@@ -33,6 +33,7 @@ type Config struct {
 
 	DefaultOffset    string
 	DefaultLimit     string
+	
 	PostgresHost     string
 	PostgresPort     int
 	PostgresUser     string

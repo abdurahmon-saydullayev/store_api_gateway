@@ -7,6 +7,14 @@ definitions:
       status:
         type: string
     type: object
+  models.UpdatePatch:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      id:
+        type: string
+    type: object
   user_service.CreateOTP:
     properties:
       phone_number:
@@ -17,6 +25,30 @@ definitions:
       date_of_birth:
         type: string
       first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  user_service.GetListUserResponse:
+    properties:
+      count:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/user_service.User'
+        type: array
+    type: object
+  user_service.UpdateUser:
+    properties:
+      date_of_birth:
+        type: string
+      first_name:
+        type: string
+      id:
         type: string
       last_name:
         type: string
@@ -143,6 +175,57 @@ paths:
       tags:
       - OTP
   /user:
+    get:
+      consumes:
+      - application/json
+      description: Get User List
+      operationId: get_user_list
+      parameters:
+      - description: offset
+        in: query
+        name: offset
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetAllUserResponseBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_service.GetListUserResponse'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get User List
+      tags:
+      - User
     post:
       consumes:
       - application/json
@@ -189,6 +272,50 @@ paths:
       tags:
       - User
   /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User
+      operationId: delete_user
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete User
+      tags:
+      - User
     get:
       consumes:
       - application/json
@@ -231,6 +358,106 @@ paths:
                   type: string
               type: object
       summary: Get User By ID
+      tags:
+      - User
+    patch:
+      consumes:
+      - application/json
+      description: Patch User
+      operationId: patch_user
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: UpdatePatchRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_service.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Patch User
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update User
+      operationId: update_user
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: UpdateUserRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_service.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Update User
       tags:
       - User
 swagger: "2.0"
