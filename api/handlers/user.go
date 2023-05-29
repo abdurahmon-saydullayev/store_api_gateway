@@ -17,7 +17,7 @@ import (
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param profile body user_service.CreateUserRequest true "CreateUserRequestBody"
+// @Param profile body user_service.CreateUser true "CreateUserRequestBody"
 // @Success 200 {object} http.Response{data=user_service.User} "GetUserBody"
 // @Response 400 {object} http.Response{data=string} "Invalid Argument"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
