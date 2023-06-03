@@ -12,7 +12,7 @@ import (
 
 // CreateOTP godoc
 // @ID create_otp
-// @Router /login [POST]
+// @Router /check [POST]
 // @Summary Create OTP
 // @Description  Create OTP
 // @Tags OTP
@@ -45,7 +45,7 @@ func (h *Handler) CreateUserOTP(c *gin.Context) {
 
 // VerifyOTP godoc
 // @ID verify_otp
-// @Router /login [GET]
+// @Router /check [GET]
 // @Summary Verify OTP
 // @Description Verify OTP
 // @Tags OTP
@@ -76,7 +76,7 @@ func (h *Handler) VerifyUserOTP(c *gin.Context) {
 		return
 	}
 
-	// check existense of user
+	// check exist
 	user, err := h.services.UserService().Check(
 		c.Request.Context(),
 		&user_service.UserPhoneNumberReq{

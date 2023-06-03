@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	Create(ctx context.Context, in *CreateUser, opts ...grpc.CallOption) (*User, error)
+	Create(ctx context.Context, in *CreateUser, opts ...grpc.CallOption) (*UserPrimaryKey, error)
 	GetByID(ctx context.Context, in *UserPrimaryKey, opts ...grpc.CallOption) (*User, error)
 	GetList(ctx context.Context, in *GetListUserRequest, opts ...grpc.CallOption) (*GetListUserResponse, error)
 	Update(ctx context.Context, in *UpdateUser, opts ...grpc.CallOption) (*User, error)
@@ -38,8 +38,8 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) Create(ctx context.Context, in *CreateUser, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) Create(ctx context.Context, in *CreateUser, opts ...grpc.CallOption) (*UserPrimaryKey, error) {
+	out := new(UserPrimaryKey)
 	err := c.cc.Invoke(ctx, "/user_service.UserService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (c *userServiceClient) Check(ctx context.Context, in *UserPhoneNumberReq, o
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
-	Create(context.Context, *CreateUser) (*User, error)
+	Create(context.Context, *CreateUser) (*UserPrimaryKey, error)
 	GetByID(context.Context, *UserPrimaryKey) (*User, error)
 	GetList(context.Context, *GetListUserRequest) (*GetListUserResponse, error)
 	Update(context.Context, *UpdateUser) (*User, error)
@@ -139,7 +139,7 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) Create(context.Context, *CreateUser) (*User, error) {
+func (UnimplementedUserServiceServer) Create(context.Context, *CreateUser) (*UserPrimaryKey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
 func (UnimplementedUserServiceServer) GetByID(context.Context, *UserPrimaryKey) (*User, error) {

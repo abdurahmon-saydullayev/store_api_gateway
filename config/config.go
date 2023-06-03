@@ -25,6 +25,7 @@ type Config struct {
 	Environment     string // debug, test, release
 	Version         string
 	SecretKey       string
+
 	UserServiceHost string
 	UserServicePort string
 
@@ -53,16 +54,16 @@ func Load() Config {
 
 	config.ServiceName = cast.ToString(getOrReturnDefaultValue("SERVICE_NAME", "api-gateway"))
 	config.ServiceHost = cast.ToString(getOrReturnDefaultValue("SERVICE_HOST", "localhost"))
-	config.ServicePort = cast.ToString(getOrReturnDefaultValue("SERVICE_PORT", ":9001"))
+	config.ServicePort = cast.ToString(getOrReturnDefaultValue("SERVICE_PORT", ":9090"))
 
 	config.Environment = cast.ToString(getOrReturnDefaultValue("ENVIRONMENT", DebugMode))
 	config.Version = cast.ToString(getOrReturnDefaultValue("VERSION", "1.0"))
 
 	config.UserServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.UserServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9000"))
+	config.UserServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9091"))
 
 	config.OrderServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.OrderServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":8080"))
+	config.OrderServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9092"))
 
 	config.SecretKey = "hello"
 

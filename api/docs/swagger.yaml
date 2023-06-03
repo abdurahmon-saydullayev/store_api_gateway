@@ -15,6 +15,32 @@ definitions:
       id:
         type: string
     type: object
+  order_service.CreateOrder:
+    properties:
+      product_id:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: string
+    type: object
+  order_service.Order:
+    properties:
+      id:
+        type: string
+      product_id:
+        type: string
+      status:
+        type: string
+      user_first_name:
+        type: string
+      user_id:
+        type: string
+      user_last_name:
+        type: string
+      user_phone_number:
+        type: string
+    type: object
   user_service.CreateOTP:
     properties:
       phone_number:
@@ -79,7 +105,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /login:
+  /check:
     get:
       consumes:
       - application/json
@@ -174,6 +200,97 @@ paths:
       summary: Create OTP
       tags:
       - OTP
+  /order:
+    post:
+      consumes:
+      - application/json
+      description: Create Order
+      operationId: create_order
+      parameters:
+      - description: CreateOrderRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetOrderBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Order'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Order
+      tags:
+      - Order
+  /order/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Order By ID
+      operationId: get_order_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OrderBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Order'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Order By ID
+      tags:
+      - Order
   /user:
     get:
       consumes:

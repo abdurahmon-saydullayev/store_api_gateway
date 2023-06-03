@@ -10,7 +10,7 @@ import "user.proto";
 
 
 service UserService {
-    rpc Create(CreateUser) returns (User);
+    rpc Create(CreateUser) returns (UserPrimaryKey);
     rpc GetByID(UserPrimaryKey) returns (User);
     rpc GetList(GetListUserRequest) returns (GetListUserResponse);
     rpc Update(UpdateUser) returns (User);

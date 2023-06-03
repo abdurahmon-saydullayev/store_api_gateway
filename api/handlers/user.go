@@ -165,7 +165,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// PatchCUser godoc
+// PatchUser godoc
 // @ID patch_user
 // @Router /user/{id} [PATCH]
 // @Summary Patch User
